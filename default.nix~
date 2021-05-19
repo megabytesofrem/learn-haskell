@@ -1,9 +1,0 @@
-{ghc}:
-with ( import <nixpkgs> { } );
-
-haskell.lib.buildStackProject {
-  inherit ghc;
-  name = "learn-haskell-env";
-
-  buildInputs = [ haskell-language-server ];
-}
