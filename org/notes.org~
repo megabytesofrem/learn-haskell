@@ -1,0 +1,49 @@
+#+TITLE: learn-haskell
+#+AUTHOR: abi (bimorphism)
+
+* Preface
+These are just my *personal* notes I'm taking to help myself learn the language.
+As such, they may not be fully complete -- or even well documented (compared to other tutorials).
+
+I am also writing them in Org mode since I find it convinient for note taking and I daily-drive emacs,
+so your editor of choice will need to be able to display org mode files to view them.
+
+* Basic types
+#+begin_src haskell
+  author          = "abi" -- string
+  meaningOfLife   = 42    -- integer (whole numbers)
+  piConstant      = 3.14  -- floats
+
+  -- Integer is like Int but *really really* big
+  -- Float and Double are part of Fractional typeclass
+
+  -- Int and Integer are part of Integral typeclass
+  -- Num is the base typeclass for *all* numeric types
+#+end_src
+
+
+Lists are defined using [ and ]. They can only hold elements that are all of the *same* type -
+eg a list of *String* can /only/ hold Strings and nothing else.
+#+begin_src haskell
+  someNumbers = [1, 2, 3, 4, 5]            -- [Int]
+  fruits = ["apple", "orange", "banana"]   -- [String]
+
+  -- Strings are just [Char] - it's just an alias
+  aString = "foo bar"
+
+  -- So all the list functions work on strings, and list of type a
+
+  -- List functions
+  head someNumbers -- head gets the first item in a list => 1
+  tail someNumbers -- tail gets the *rest* of the list => [2,3,4,5]
+
+  -- init gets everything *up to* the end of the list
+  init someNumbers -- => [1,2,3,4]
+
+  -- take/drop takes/drops n items from a list
+  take 2 someNumbers -- [1,2]
+  drop 2 someNumbers -- [3,4,5]
+
+  -- replicate replicates an element n times
+  replicate 5 "whee" -- ["whee", "whee", "whee", "whee", "whee"]
+#+end_src
