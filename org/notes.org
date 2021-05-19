@@ -62,3 +62,51 @@ Tuples are defined like (a, b). /a/ and /b/ can both have different types.
   -- They can be used in lists!
   let pairs = [(1, 'a'), (2, 'b'), (3, 'c')]
 #+end_src
+* Guards and Conditionals
+If expressions *must* have an else condition since unlike imperative languages,
+they are expressions too and they must /always/ return a value of some sort.
+
+#+begin_src haskell
+  -- Valid
+  if condition then if_value else else_value
+
+  -- Invalid
+  if condition then if_value -- no else supplied, if/else needs to return a value!
+
+  -- All comparison operators are available
+  -- >, <, <=, >=, = but /= is not equal instead of != like most languages.
+#+end_src
+
+** Guards
+Guards are syntactic sugar for if expressions.
+
+#+begin_src haskell
+  -- Very pointless contrived example since even exists in Prelude but
+  tellMeIsItEven :: (Integral a) => a -> String
+  tellMeIsItEven n
+    | n `mod` 2 == 0 = "yes it is"
+    | otherwise      = "no its not"
+
+  -- We could have written this like
+  -- But guards make it clearer to write
+  tellMeIsItEven' n = if n `mod` 2 == 0 then "yes it is" else "no its not"
+#+end_src
+
+* Functions
+** Higher order functions
+Higher order functions are functions that take other functions as arguments/input.
+
+~filter~ is an example of a higher order function. It's type says it takes a function
+~(a -> Bool)~ and a list of ~a~ things and returns back a new list of ~a~ things.
+
+** Currying
+All functions are curried in Haskell. What this means is that a function ~a -> a -> a~ can
+be expressed as ~a -> (a -> a)~.
+
+Which means that the function takes a /single/ a and returns a *new* function that takes
+another /a/ and this function will *eventually* return an /a/ of its own.
+
+Because currying is opt-out, functions can be partially applied (specifying only some of 
+their input parameters) so we get a new function back which when called will apply it to the
+rest of the arguments.
+
