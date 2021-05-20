@@ -92,6 +92,16 @@ Guards are syntactic sugar for if expressions.
   tellMeIsItEven' n = if n `mod` 2 == 0 then "yes it is" else "no its not"
 #+end_src
 
+* Let and where
+Let and where can both used to bind values/functions inside a context.
+
+#+begin_src haskell
+  -- Again more contrived examples
+  printSquare n = let square = n * n in square n
+
+  printSquare n = square n
+    where square = n * n
+#+end_src
 * Functions
 ** Higher order functions
 Higher order functions are functions that take other functions as arguments/input.
@@ -99,14 +109,56 @@ Higher order functions are functions that take other functions as arguments/inpu
 ~filter~ is an example of a higher order function. It's type says it takes a function
 ~(a -> Bool)~ and a list of ~a~ things and returns back a new list of ~a~ things.
 
+Functions can be partially applied in sections eg ~(+1) 3~.
+
 ** Currying
 All functions are curried in Haskell. What this means is that a function ~a -> a -> a~ can
 be expressed as ~a -> (a -> a)~.
 
 Which means that the function takes a /single/ a and returns a *new* function that takes
 another /a/ and this function will *eventually* return an /a/ of its own.
+* Typeclasses
+** Writing typeclass instances for Eq
+Typeclass instances for Eq require either ~==~ or ~/=~ to be implemented.
 
-Because currying is opt-out, functions can be partially applied (specifying only some of 
-their input parameters) so we get a new function back which when called will apply it to the
-rest of the arguments.
+#+begin_src haskell
+  data ANumber = ANumber Integer
 
+  instance Eq ANumber where
+    (ANumber a) == (ANumber b) = a == b
+
+  -- Writing an Eq instance for a polymorphic type
+  data AThing a = AThing a
+
+  -- WONT WORK
+  instance Eq (AThing a) where
+    -- ...
+
+  -- WILL WORK
+  instance Eq a => Eq (AThing a) where
+    -- ...
+#+end_src
+
+When writing instances for polymorphic types, there is no way to assume it will have an ~Eq~ instance
+if we use ~instance Eq (AThing a)~ since we don't know what /a/ is -- it could be literally anything.
+
+If we use ~Eq a =>~ this will put a constraint of ~Eq~ onto the type which means we know that it will
+have an ~Eq~ instance implemented.
+
+** Writing typeclass instances for Ord
+Typeclass instances for Ord require ~compare~ to be implemented.
+
+#+begin_src haskell
+  data FastFood = Pizza
+                | Burgers
+                | Fries
+                deriving Show
+
+  -- Assume the typeclass instance for Eq has been filled out
+
+  instance Ord FastFood where
+    Pizza `compare` _      = GT
+    _     `compare` Pizza  = LT
+    Pizza `compare` Pizza  = EQ
+    _     `compare` _      = EQ
+#+end_src
